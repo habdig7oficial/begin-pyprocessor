@@ -6,54 +6,63 @@ path = ARGV[0]
 
 file = File.read(path)
 
-parsed = file.gsub /\s+/, "<space>"
-parsed = parsed.gsub "\n", "<newline>"
-
-puts parsed
-
-puts "----"
-
-lines = parsed.split("<newline>")
+parsed = file.gsub "\n", "<newline>"
+parsed = parsed.gsub /\s+/, "<space>"
 
 indents = 0
-reordened = []
 
-lines.each_with_index do | line, i |
-   puts "#{line.dump} - #{i}"
+
+parsed = parsed.split("<newline>")
+
+global = []
+
+lines = parsed.each_with_index do | line, i |
+   #puts "#{line.dump} - #{i}"
 
     tokens = line.split("<space>")
 
+    #puts tokens.inspect
+
+    tokens.reject!(&:empty?)
+
+    puts tokens.inspect
  
+    reordened = []
+
     tokens.each_with_index do |token, j|
         if token == "begin"
-            puts "\t #{token} - #{j}".red
+            #puts "\t #{token} - #{j}".red
             
             indents += 1
-            reordened.push "\n"
+            #reordened.push "\n"
 
         elsif token == "end"
-            puts "\t #{token} - #{j}".green
+            #puts "\t #{token} - #{j}".green
 
             indents -= 1
-            reordened.push "\n\n"
+            #reordened.push "\n"
 
       # elsif token == " " && tokens[j + 1] == " "
           #  break
-        else
-            puts "\t #{token} - #{j}"
-
+        elsif j == 0 
             tabs = indents.times.collect{ "\t" }.join
-            
-            reordened.push "#{tabs}#{token} "
-        end
+            reordened.push "#{tabs}#{token.strip} "
+        else
+            #puts "\t #{token} - #{j}"
+            #puts "\t\t #{token} -> #{tokens[j + 1]} - #{j}"
 
+            reordened.push "#{token} ".lstrip
+        end
     end
+   # #puts reordened.join
     reordened.push "\n"
+
+    (global << reordened).flatten!
 end
 
-puts "----"
+#puts "----"
 
-puts lines.join("\n")
-processed = reordened.join
+processed =  global.join
+#puts processed
 
 File.write("processed_#{ARGV[0]}", processed)
