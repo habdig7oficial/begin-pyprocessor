@@ -1,5 +1,6 @@
-require "rainbow/refinement"
-using Rainbow
+#!/bin/env ruby
+#require "rainbow/refinement"
+#using Rainbow
 
 path = ARGV[0]
 
@@ -66,3 +67,4 @@ processed =  global.join
 #puts processed
 
 File.write("processed_#{ARGV[0]}", processed)
+system "processed_#{ARGV[0]}"
