@@ -67,4 +67,4 @@ processed =  global.join
 #puts processed
 
 File.write("processed_#{ARGV[0]}", processed)
-system "processed_#{ARGV[0]}"
+system "python3 processed_#{ARGV[0]}"
